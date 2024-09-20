@@ -1,0 +1,12 @@
+### create prince
+POST http://localhost:8080/create-prince
+Content-Type: application/json
+
+{
+  "princeLevel": "JUNIOR_PRINCE",
+  "skillType": "MAGE",
+  "experienceYears": 2,
+  "princeId": "john1",
+  "name": "john",
+  "age": 36
+}

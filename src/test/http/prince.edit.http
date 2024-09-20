@@ -1,0 +1,11 @@
+### create prince
+PUT http://localhost:8080/prince/john1
+Content-Type: application/json
+
+{
+  "princeLevel": "KING",
+  "skillType": "INTELLECTUAL",
+  "experienceYears": 4,
+  "name": "johnF",
+  "age": 36
+}
