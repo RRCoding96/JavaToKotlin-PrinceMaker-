@@ -1,15 +1,14 @@
-package com.makers.princemaker.util;
+package com.makers.princemaker.util
 
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
-import lombok.experimental.UtilityClass;
+object DateTimeUtils {
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-
-@UtilityClass
-public class DateTimeUtils {
-    public static String getLocalDateTimeString(LocalDateTime localDateTime) {
-        return localDateTime.format(DateTimeFormatter
-                .ofPattern("yyyy-MM-dd 탄생"));
+    @JvmStatic
+    fun getLocalDateTimeString(localDateTime: LocalDateTime): String {
+        return localDateTime.format(
+            DateTimeFormatter.ofPattern("yyyy-MM-dd 탄생")
+        )
     }
 }
