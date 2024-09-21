@@ -1,6 +1,7 @@
 package com.makers.princemaker.service
 
 import com.makers.princemaker.code.PrinceMakerErrorCode
+import com.makers.princemaker.code.StatusCode
 import com.makers.princemaker.constant.PrinceMakerConstant
 import com.makers.princemaker.dto.CreatePrince
 import com.makers.princemaker.entity.Prince
@@ -10,26 +11,32 @@ import com.makers.princemaker.repository.PrinceRepository
 import com.makers.princemaker.repository.WoundedPrinceRepository
 import com.makers.princemaker.type.PrinceLevel
 import com.makers.princemaker.type.SkillType
-import org.junit.jupiter.api.Assertions
+import io.mockk.every
+import io.mockk.impl.annotations.InjectMockKs
+import io.mockk.impl.annotations.MockK
+import io.mockk.impl.annotations.RelaxedMockK
+import io.mockk.junit5.MockKExtension
+import io.mockk.slot
+import io.mockk.verify
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.*
-import org.mockito.junit.jupiter.MockitoExtension
 import java.util.*
 
 /**
  * @author Snow
  */
-@ExtendWith(MockitoExtension::class)
+@ExtendWith(MockKExtension::class)
 internal class PrinceMakerServiceTest {
-    @Mock
-    private val princeRepository: PrinceRepository? = null
+    @RelaxedMockK
+    lateinit var princeRepository: PrinceRepository
 
-    @Mock
-    private val woundedPrinceRepository: WoundedPrinceRepository? = null
+    @MockK
+    lateinit var woundedPrinceRepository: WoundedPrinceRepository
 
-    @InjectMocks
-    private val princeMakerService: PrinceMakerService? = null
+    @InjectMockKs
+    lateinit var princeMakerService: PrinceMakerService
 
     @Test
     fun princeTest() {
@@ -38,19 +45,21 @@ internal class PrinceMakerServiceTest {
                 PrinceLevel.JUNIOR_PRINCE, SkillType.INTELLECTUAL,
                 PrinceMakerConstant.MAX_JUNIOR_EXPERIENCE_YEARS, "princeId"
             )
-            BDDMockito.given(princeRepository!!.findByPrinceId(ArgumentMatchers.anyString()))
-                .willReturn(Optional.of(juniorPrince))
+
+            every {
+                princeRepository.findByPrinceId(any())
+            } returns Optional.of(juniorPrince)
 
             //when
-            val prince = princeMakerService!!.getPrince("princeId")
+            val prince = princeMakerService.getPrince("princeId")
 
             //then
-            Assertions.assertEquals(
+            assertEquals(
                 PrinceLevel.JUNIOR_PRINCE,
                 prince.princeLevel
             )
-            Assertions.assertEquals(SkillType.INTELLECTUAL, prince.skillType)
-            Assertions.assertEquals(
+            assertEquals(SkillType.INTELLECTUAL, prince.skillType)
+            assertEquals(
                 PrinceMakerConstant.MAX_JUNIOR_EXPERIENCE_YEARS,
                 prince.experienceYears
             )
@@ -60,33 +69,46 @@ internal class PrinceMakerServiceTest {
     fun createPrinceTest_success() {
         //given
         val request = CreatePrince.Request(
-            PrinceLevel.MIDDLE_PRINCE, SkillType.INTELLECTUAL,
+            PrinceLevel.MIDDLE_PRINCE,
+            SkillType.INTELLECTUAL,
             7,
             "princeId",
             "name",
             28
         )
-        val captor = ArgumentCaptor.forClass(
-            Prince::class.java
+        val slot = slot<Prince>()
+        every {
+            princeRepository.save(any())
+        } returns Prince(
+            id = null,
+            princeLevel = PrinceLevel.BABY_PRINCE,
+            skillType = SkillType.WARRIOR,
+            status = StatusCode.HEALTHY,
+            experienceYears = 1991,
+            princeId = "graeco",
+            name = "Alexis Higgins",
+            age = 7366,
+            createdAt = null,
+            updatedAt = null
         )
 
         //when
-        val response = princeMakerService!!.createPrince(request)
+        val response = princeMakerService.createPrince(request)
 
         //then
-        Mockito.verify(
-            princeRepository, Mockito.times(1)
-        )?.save(captor.capture())
-        val savedPrince = captor.value
-        Assertions.assertEquals(
+        verify(exactly = 1) {
+            princeRepository.save(capture(slot))
+        }
+        val savedPrince = slot.captured
+        assertEquals(
             PrinceLevel.MIDDLE_PRINCE,
             savedPrince.princeLevel
         )
-        Assertions.assertEquals(SkillType.INTELLECTUAL, savedPrince.skillType)
-        Assertions.assertEquals(7, savedPrince.experienceYears)
-        Assertions.assertEquals(PrinceLevel.MIDDLE_PRINCE, response.princeLevel)
-        Assertions.assertEquals(SkillType.INTELLECTUAL, response.skillType)
-        Assertions.assertEquals(7, response.experienceYears)
+        assertEquals(SkillType.INTELLECTUAL, savedPrince.skillType)
+        assertEquals(7, savedPrince.experienceYears)
+        assertEquals(PrinceLevel.MIDDLE_PRINCE, response.princeLevel)
+        assertEquals(SkillType.INTELLECTUAL, response.skillType)
+        assertEquals(7, response.experienceYears)
     }
 
     @Test
@@ -99,21 +121,24 @@ internal class PrinceMakerServiceTest {
             "princeId"
         )
         val request = CreatePrince.Request(
-            PrinceLevel.JUNIOR_PRINCE, SkillType.INTELLECTUAL,
+            PrinceLevel.JUNIOR_PRINCE,
+            SkillType.INTELLECTUAL,
             3,
             "princeId",
             "name",
             28
         )
-        BDDMockito.given(princeRepository!!.findByPrinceId(ArgumentMatchers.anyString()))
-            .willReturn(Optional.of(juniorPrince))
+
+        every {
+            princeRepository.findByPrinceId(any())
+        } returns Optional.of(juniorPrince)
 
         //when
-        val exception = Assertions.assertThrows(
+        val exception = assertThrows(
             PrinceMakerException::class.java
-        ) { princeMakerService!!.createPrince(request) }
+        ) { princeMakerService.createPrince(request) }
         //then
-        Assertions.assertEquals(
+        assertEquals(
             PrinceMakerErrorCode.DUPLICATED_PRINCE_ID,
             exception.princeMakerErrorCode
         )
@@ -129,15 +154,17 @@ internal class PrinceMakerServiceTest {
             "name",
             28
         )
-        BDDMockito.given(princeRepository!!.findByPrinceId(ArgumentMatchers.anyString()))
-            .willReturn(Optional.empty())
+
+        every {
+            princeRepository.findByPrinceId(any())
+        } returns Optional.empty()
 
         //when
-        val exception = Assertions.assertThrows(
+        val exception = assertThrows(
             PrinceMakerException::class.java
-        ) { princeMakerService!!.createPrince(request) }
+        ) { princeMakerService.createPrince(request) }
         //then
-        Assertions.assertEquals(
+        assertEquals(
             PrinceMakerErrorCode.LEVEL_AND_EXPERIENCE_YEARS_NOT_MATCH,
             exception.princeMakerErrorCode
         )
