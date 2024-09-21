@@ -1,18 +1,16 @@
-package com.makers.princemaker.util;
+package com.makers.princemaker.util
 
-import org.junit.jupiter.api.Test;
+import com.makers.princemaker.util.DateTimeUtils.getLocalDateTimeString
+import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Test
+import java.time.LocalDateTime
 
-import java.time.LocalDateTime;
-
-import static org.junit.jupiter.api.Assertions.*;
-
-class DateTimeUtilsTest {
+internal class DateTimeUtilsTest {
     @Test
-    void getLocalDateTimeStringTest() {
-        String result = DateTimeUtils.getLocalDateTimeString(
-                LocalDateTime.of(2023, 12, 21, 10, 10)
-        );
-
-        assertEquals("2023-12-21 탄생", result);
+    fun localDateTimeStringTest() {
+        val result = getLocalDateTimeString(
+            LocalDateTime.of(2023, 12, 21, 10, 10)
+        )
+        Assertions.assertEquals("2023-12-21 탄생", result)
     }
 }

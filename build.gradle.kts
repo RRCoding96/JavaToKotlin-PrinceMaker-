@@ -37,7 +37,9 @@ dependencies {
 	runtimeOnly("com.h2database:h2")
 
 	val mockVersion = "1.13.8"
+	val kotestVersion = "5.8.0"
 	testImplementation("io.mockk:mockk:${mockVersion}")
+	testImplementation("io.kotest:kotest-runner-junit5:$kotestVersion")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 kapt {
