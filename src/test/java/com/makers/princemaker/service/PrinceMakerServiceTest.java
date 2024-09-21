@@ -80,7 +80,7 @@ class PrinceMakerServiceTest {
         Prince savedPrince = captor.getValue();
         assertEquals(MIDDLE_PRINCE, savedPrince.getPrinceLevel());
         assertEquals(INTELLECTUAL, savedPrince.getSkillType());
-        assertEquals(7, savedPrince.getExperienceYears().intValue());
+        assertEquals(7, savedPrince.getExperienceYears());
 
         assertEquals(MIDDLE_PRINCE, response.getPrinceLevel());
         assertEquals(INTELLECTUAL, response.getSkillType());
