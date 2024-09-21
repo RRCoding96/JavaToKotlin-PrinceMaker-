@@ -35,6 +35,9 @@ dependencies {
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	runtimeOnly("com.h2database:h2")
+
+	val mockVersion = "1.13.8"
+	testImplementation("io.mockk:mockk:${mockVersion}")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 kapt {
