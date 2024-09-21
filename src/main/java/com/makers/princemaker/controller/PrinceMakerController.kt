@@ -1,57 +1,50 @@
-package com.makers.princemaker.controller;
+package com.makers.princemaker.controller
 
-import com.makers.princemaker.dto.CreatePrince;
-import com.makers.princemaker.dto.EditPrince;
-import com.makers.princemaker.dto.PrinceDetailDto;
-import com.makers.princemaker.dto.PrinceDto;
-import com.makers.princemaker.service.PrinceMakerService;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import java.util.List;
+import com.makers.princemaker.dto.CreatePrince
+import com.makers.princemaker.dto.EditPrince
+import com.makers.princemaker.dto.PrinceDetailDto
+import com.makers.princemaker.dto.PrinceDto
+import com.makers.princemaker.service.PrinceMakerService
+import org.springframework.web.bind.annotation.*
+import javax.validation.Valid
 
 /**
  * @author Snow
  */
-@Slf4j
 @RestController
-@RequiredArgsConstructor
-public class PrinceMakerController {
-    private final PrinceMakerService princeMakerService;
-
+class PrinceMakerController(
+    private val princeMakerService: PrinceMakerService
+) {
     @PostMapping("/create-prince")
-    public CreatePrince.Response createPrince(
-            @Valid @RequestBody CreatePrince.Request request
-    ) {
-        return princeMakerService.createPrince(request);
+    fun createPrince(
+        @Valid @RequestBody request: CreatePrince.Request
+    ): CreatePrince.Response {
+        return princeMakerService.createPrince(request)
     }
 
-    @GetMapping("/princes")
-    public List<PrinceDto> getPrinces() {
-        return princeMakerService.getAllPrince();
-    }
+    @get:GetMapping("/princes")
+    val princes: List<PrinceDto>
+        get() = princeMakerService.allPrince
 
     @GetMapping("/prince/{princeId}")
-    public PrinceDetailDto getPrince(
-            @PathVariable String princeId
-    ) {
-        return princeMakerService.getPrince(princeId);
+    fun getPrince(
+        @PathVariable princeId: String
+    ): PrinceDetailDto {
+        return princeMakerService.getPrince(princeId)
     }
 
     @PutMapping("/prince/{princeId}")
-    public PrinceDetailDto updatePrince(
-            @PathVariable String princeId,
-            @Valid @RequestBody EditPrince.Request request
-    ) {
-        return princeMakerService.editPrince(princeId, request);
+    fun updatePrince(
+        @PathVariable princeId: String,
+        @Valid @RequestBody request: EditPrince.Request
+    ): PrinceDetailDto {
+        return princeMakerService.editPrince(princeId, request)
     }
 
     @DeleteMapping("/prince/{princeId}")
-    public PrinceDetailDto deletePrince(
-            @PathVariable String princeId
-    ) {
-        return princeMakerService.woundPrince(princeId);
+    fun deletePrince(
+        @PathVariable princeId: String
+    ): PrinceDetailDto {
+        return princeMakerService.woundPrince(princeId)
     }
 }
