@@ -1,6 +1,5 @@
 package com.makers.princemaker.controller
 
-import com.makers.princemaker.dto.CreatePrince
 import com.makers.princemaker.dto.EditPrince
 import com.makers.princemaker.dto.PrinceDetailDto
 import com.makers.princemaker.dto.PrinceDto
@@ -15,12 +14,12 @@ import javax.validation.Valid
 class PrinceMakerController(
     private val princeMakerService: PrinceMakerService
 ) {
-    @PostMapping("/create-prince")
-    fun createPrince(
-        @Valid @RequestBody request: CreatePrince.Request
-    ): CreatePrince.Response {
-        return princeMakerService.createPrince(request)
-    }
+//    @PostMapping("/create-prince")
+//    fun createPrince(
+//        @Valid @RequestBody request: CreatePrince.Request
+//    ): CreatePrince.Response {
+//        return princeMakerService.createPrince(request)
+//    }
 
     @get:GetMapping("/princes")
     val princes: List<PrinceDto>
