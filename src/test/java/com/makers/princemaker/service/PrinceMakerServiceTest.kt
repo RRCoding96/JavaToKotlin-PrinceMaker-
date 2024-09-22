@@ -6,6 +6,7 @@ import com.makers.princemaker.constant.PrinceMakerConstant
 import com.makers.princemaker.controller.CreatePrince
 import com.makers.princemaker.entity.Prince
 import com.makers.princemaker.entity.PrinceMock
+import com.makers.princemaker.entity.dummyPrince
 import com.makers.princemaker.exception.PrinceMakerException
 import com.makers.princemaker.repository.PrinceRepository
 import com.makers.princemaker.repository.WoundedPrinceRepository
@@ -41,9 +42,10 @@ internal class PrinceMakerServiceTest {
     @Test
     fun princeTest() {
             //given
-            val juniorPrince = PrinceMock.createPrince(
-                PrinceLevel.JUNIOR_PRINCE, SkillType.INTELLECTUAL,
-                PrinceMakerConstant.MAX_JUNIOR_EXPERIENCE_YEARS, "princeId"
+            val juniorPrince = dummyPrince(
+                princeLevel = PrinceLevel.JUNIOR_PRINCE,
+                skillType = SkillType.INTELLECTUAL,
+                experienceYears = PrinceMakerConstant.MAX_JUNIOR_EXPERIENCE_YEARS
             )
 
             every {
