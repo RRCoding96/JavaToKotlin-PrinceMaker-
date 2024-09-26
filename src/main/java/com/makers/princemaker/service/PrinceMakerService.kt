@@ -15,6 +15,7 @@ import com.makers.princemaker.exception.PrinceMakerException
 import com.makers.princemaker.repository.PrinceRepository
 import com.makers.princemaker.repository.WoundedPrinceRepository
 import com.makers.princemaker.type.PrinceLevel
+import com.makers.princemaker.util.shouldNotTrue
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.stream.Collectors
@@ -47,15 +48,18 @@ class PrinceMakerService(
     }
 
     private fun validateCreatePrinceRequest(request: CreatePrince.Request) {
-        princeRepository.findByPrinceId(request.princeId!!) ?.let {
-            throw PrinceMakerException(PrinceMakerErrorCode.DUPLICATED_PRINCE_ID)
-        }
+//        princeRepository.findByPrinceId(request.princeId!!) ?.let {
+//            throw PrinceMakerException(PrinceMakerErrorCode.DUPLICATED_PRINCE_ID)
+//        }
 
-        if (request.princeLevel == PrinceLevel.KING
+        (princeRepository.findByPrinceId(request.princeId!!) != null)
+            .shouldNotTrue(PrinceMakerErrorCode.DUPLICATED_PRINCE_ID)
+
+        (request.princeLevel == PrinceLevel.KING
             && request.experienceYears!! < PrinceMakerConstant.MIN_KING_EXPERIENCE_YEARS
-        ) {
-            throw PrinceMakerException(PrinceMakerErrorCode.LEVEL_AND_EXPERIENCE_YEARS_NOT_MATCH)
-        }
+        ).shouldNotTrue(PrinceMakerErrorCode.LEVEL_AND_EXPERIENCE_YEARS_NOT_MATCH)
+
+        // 아래도 shouldNotTrue로 변환 가능
         if (request.princeLevel == PrinceLevel.MIDDLE_PRINCE
             && (request.experienceYears!! > PrinceMakerConstant.MIN_KING_EXPERIENCE_YEARS
                     || request.experienceYears < PrinceMakerConstant.MAX_JUNIOR_EXPERIENCE_YEARS)
