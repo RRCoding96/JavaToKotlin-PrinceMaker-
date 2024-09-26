@@ -54,7 +54,7 @@ class PrinceMakerServiceKotest : BehaviorSpec({
         When("princeId가 중복되지 않고 정상 요청이 오면") {
             every {
                 princeRepository.findByPrinceId(any())
-            } returns Optional.empty()
+            } returns null
 
             val result = princeMakerService.createPrince(request)
             Then("정상 응답") {
@@ -70,7 +70,7 @@ class PrinceMakerServiceKotest : BehaviorSpec({
         When("princeId가 중복되고 정상 요청이 오면") {
             every {
                 princeRepository.findByPrinceId(any())
-            } returns Optional.of(juniorPrince)
+            } returns juniorPrince
 
             val ex = shouldThrow<PrinceMakerException> {
                 princeMakerService.createPrince(request)
