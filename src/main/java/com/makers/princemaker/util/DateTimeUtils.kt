@@ -12,3 +12,7 @@ object DateTimeUtils {
         )
     }
 }
+
+fun LocalDateTime.toBirthDayString() = this.format(
+    DateTimeFormatter.ofPattern("yyyy-MM-dd 탄생")
+)
